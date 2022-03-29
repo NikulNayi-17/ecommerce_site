@@ -141,6 +141,7 @@
     var csrftoken = getCookie('csrftoken')
     var orderID = "{{order.order_number}}"
     var payment_method = "PayPal"
+    var redirect_url = "{% url 'order_complete' %}"
 
 
     paypal.Buttons({
@@ -165,9 +166,7 @@
         // Finalize the transaction after payer approval
         onApprove: function (data, actions) {
             return actions.order.capture().then(function (orderData) {
-                // Successful capture! For dev/demo purposes:
-                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                var transaction = orderData.purchase_units[0].payments.captures[0];
+
                 sendData()
                 function sendData() {
                     fetch(url, {
@@ -180,16 +179,17 @@
                             orderID: orderID,
                             transID: orderData.id,
                             payment_method: payment_method,
-                            status: transaction.status,
+                            status: orderData.status,
 
                         }),
                     })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            window.location.href = redirect_url + '?order_number=' + data.order_number + '&payment_id=' + data.transID
+
+                        })
                 }
-                // When ready to go live, remove the alert and show a success message within this page. For example:
-                // var element = document.getElementById('paypal-button-container');
-                // element.innerHTML = '';
-                // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                // Or go to another URL:  actions.redirect('thank_you.html');
+
             });
         }
     }).render('#paypal-button-container');
