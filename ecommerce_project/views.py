@@ -1,3 +1,4 @@
+from tkinter.messagebox import NO
 from django.shortcuts import render
 from store.models import Product, ReviewRating
 
@@ -7,6 +8,7 @@ def home(request):
         is_available=True).order_by('created_date')
 
     # get the reviews
+    reviews = None
     for product in products:
         reviews = ReviewRating.objects.filter(
             product_id=product.id, status=True)
