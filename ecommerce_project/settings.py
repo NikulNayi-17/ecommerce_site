@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
-    'ecommerce-project-env.eba-iam8eptv.us-west-2.elasticbeanstalk.com']
+    'ecommerce-project-env.eba-tddzbk72.us-west-2.elasticbeanstalk.com']
 
 
 # Application definition
